@@ -1,17 +1,20 @@
-FROM amazoncorretto:17
+FROM ubuntu:22.04
 
-# Install LibreOffice
-RUN yum install -y libreoffice
+# Install required packages and LibreOffice
+RUN apt-get update && \
+    apt-get install -y libreoffice && \
+    apt-get clean
 
-# Create work folders
-RUN mkdir -p /app/input /app/output
-
+# Set the working directory
 WORKDIR /app
 
+# Copy your local input and output folders
+COPY input/ ./input/
+COPY output/ ./output/
 COPY convert.sh .
 
+# Make the script executable
 RUN chmod +x convert.sh
 
-COPY input ./input
-
+# Run the conversion script
 CMD ["./convert.sh"]
